@@ -1,21 +1,26 @@
 package com.qa
-package ims
 
-import scala.util.control.TailCalls._
-import com.qa.controllers.CrudController
-import com.qa.domain.Domain
-import com.qa.domain.Action
-import com.qa.domain.Domain._
-import com.qa.domain.Action._
-
-import com.qa.utils.Utils
+import controllers.CrudController
+import domain.Action._
+import domain.{Action, Domain}
+import domain.Domain._
+import utils.Utils
 
 class IMS(utils: Utils) {
 
-  def imsStart(): () = {
+  def imsStart(): Unit = {
+    //Getting DB details
+    println("What is your username")
+    val username = utils.getString
+    println("What is your password")
+    val password = utils.getString
+
+    //Getting User input fro which table they want to interact with
     println("Which entity would you like to use?")
-    Domain.values foreach(value => println(s"$value?")); print("Please type the name of the table: ")
+    Domain.values foreach (value => println(s"$value?"))
     val domainChoice = domain()
+
+    //
     domainChoice match {
       case CUSTOMER =>
         val active = null
@@ -31,9 +36,10 @@ class IMS(utils: Utils) {
     }
   }
 
-  def getAction(domain: Domain.Value, active: CrudController[Any]): () = {
+  def getAction(domain: Domain.Value, active: CrudController[Any]): Unit = {
     println(s"What would you like to do with $domain?")
-    Action.values foreach(value => println(s"$value?")); print("Please type the action: ")
+    Action.values foreach (value => println(s"$value?"))
+    print("Please type the action: ")
     val actionChoice = action()
     actionChoice match {
       case CREATE =>
@@ -56,9 +62,10 @@ class IMS(utils: Utils) {
     }
   }
 
+  //this function gets the domain values, calls the utils to get user input and then checks if the user has entered matching values, then the enum is returned. If nothing matches then an error is returned.
   def domain(): Domain.Value = {
-    val choice: String = utils.getString().toUpperCase()
-    choice match {
+    val pick: String = utils.getString().toUpperCase()
+    pick match {
       case "CUSTOMER" =>
         CUSTOMER
       case "ITEM" =>
@@ -73,9 +80,10 @@ class IMS(utils: Utils) {
     }
   }
 
+  //This function will take in action class values, take in a user input and then compare if the user input matches one of the values. Then it returns the enum.
   def action(): Action.Value = {
-    val choice: String = utils.getString().toUpperCase()
-    choice match {
+    val pick: String = utils.getString().toUpperCase()
+    pick match {
       case "CREATE" =>
         CREATE
       case "READ" =>
@@ -89,6 +97,6 @@ class IMS(utils: Utils) {
       case _ =>
         println("Invalid Response")
         action()
-  }
+    }
   }
 }
