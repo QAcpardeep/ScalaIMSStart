@@ -20,7 +20,7 @@ class IMS(utils: Utils) {
     Domain.values foreach (value => println(s"$value?"))
     val domainChoice = domain()
 
-    //
+
     domainChoice match {
       case CUSTOMER =>
         val active = null
