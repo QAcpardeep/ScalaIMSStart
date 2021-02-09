@@ -1,6 +1,6 @@
 package com.qa
 
-import controllers.CrudController
+import controllers.{CrudController, CustomerController}
 import domain.Action._
 import domain.{Action, Domain}
 import domain.Domain._
@@ -9,6 +9,8 @@ import utils.Utils
 class IMS(utils: Utils) {
 
   def imsStart(): Unit = {
+    lazy val CustomerController = new CustomerController(utils)
+
     //Getting DB details
     println("What is your username")
     val username = utils.getString
@@ -23,7 +25,7 @@ class IMS(utils: Utils) {
 
     domainChoice match {
       case CUSTOMER =>
-        val active = null
+        val active = CustomerController
         getAction(domainChoice, active)
       case ITEM =>
         val active = null
@@ -36,7 +38,7 @@ class IMS(utils: Utils) {
     }
   }
 
-  def getAction(domain: Domain.Value, active: CrudController[Any]): Unit = {
+  def getAction(domain: Domain.Value, active: CrudController): Unit = {
     println(s"What would you like to do with $domain?")
     Action.values foreach (value => println(s"$value?"))
     print("Please type the action: ")
@@ -46,6 +48,9 @@ class IMS(utils: Utils) {
         active.create()
         getAction(domain, active)
       case READ =>
+        active.read()
+        getAction(domain, active)
+      case READALL =>
         active.readAll()
         getAction(domain, active)
       case UPDATE =>
@@ -88,6 +93,8 @@ class IMS(utils: Utils) {
         CREATE
       case "READ" =>
         READ
+      case "READALL" =>
+        READALL
       case "UPDATE" =>
         UPDATE
       case "DELETE" =>

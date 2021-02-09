@@ -45,4 +45,17 @@ public class Utils {
 		return doubleInput;
 	}
 
+	public int getInt() {
+		int intInput = -1;
+		do {
+			String input = getString();
+			try {
+				intInput = Integer.parseInt(input);
+			} catch (NumberFormatException nfe) {
+				System.out.println("Error - Please enter a number");
+			}
+		} while (intInput == -1);
+		return intInput;
+	}
+
 }
